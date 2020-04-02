@@ -1,5 +1,4 @@
 from db import db
-from cliente import ClienteModel
 
 class PedidoModel(db.Model):
 

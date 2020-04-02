@@ -10,4 +10,5 @@ class ProdutoModel(db.Model):
 class ProdutoPedidoModel(db.Model):
     __tablename__ = 'produtos_pedidos'
 
+    id_ = db.Column(db.Integer, primary_key=True)
     quantidade = db.Column(db.Integer)
