@@ -19,12 +19,18 @@ api.add_resource(Users, "/users/")
 #rotas da aplicaçao web
 app.register_blueprint(hello_page)
 
-if __name__ == "__main__":
-    from db import db
+from db import db
 
+def create_app():
     db.init_app(app)
+    return app
+
+
+if __name__ == "__main__":
+    
+    app = create_app()
+    
     migrate = Migrate(app, db)
     manager = Manager(app)
     manager.add_command('db', MigrateCommand)
-
     manager.run()

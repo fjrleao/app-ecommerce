@@ -1,5 +1,6 @@
-from flask import request
+from flask import request, json
 from flask_restful import Resource
+from models.cliente import ClienteModel
 
 users = [
     {
@@ -29,15 +30,20 @@ class User(Resource):
 
 class Users(Resource):
     def get(self):
-        return users, 200
+        clientes = ClienteModel.query.all()
+        print(clientes)
+        for cli in clientes:
+            print(cli.nome)
+        return {'ok':'ok'}
+        #return users, 200
 
     def post(self):
         req = request.get_json()
-        user = {
-            "id" : len(users) + 1,
+        '''user = {
             "nome" : req['nome'],
             "telefone" : req['telefone']
-        }
-        users.append(user)
-        return user, 201
+        }'''
+        cliente = ClienteModel(nome=req['nome'], email=req['email'])
+        ClienteModel.save(cliente)
+        return {'sucess' : 'usuario salvo'}
 
