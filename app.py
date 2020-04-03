@@ -2,9 +2,11 @@ from flask import Flask, request
 from flask_restful import Api
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from models.cliente import ClienteModel
-from models.pedido import PedidoModel
-from models.produto import ProdutoModel, ProdutoPedidoModel
+from models.estado import Estado, Cidade
+from models.cliente import Cliente, EnderecoCliente, TelefoneCliente
+from models.comercio import CategoriaComercio, Comercio, EnderecoComercio, FormaAtendimento, FormaPagamento, TelefoneComercio
+from models.pedido import Avaliacao, EnderecoPresente, Pedido, Presente, ProdutosPedido
+from models.produto import CategoriaProduto, Produto
 from controllers.web.cliente import hello_page
 from controllers.api.cliente import User, Users
 
@@ -21,14 +23,14 @@ app.register_blueprint(hello_page)
 
 from db import db
 
-def create_app():
+def criar_app():
     db.init_app(app)
     return app
 
 
 if __name__ == "__main__":
     
-    app = create_app()
+    app = criar_app()
     
     migrate = Migrate(app, db)
     manager = Manager(app)
