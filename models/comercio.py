@@ -4,7 +4,7 @@ class CategoriaComercio(db.Model):
 
     __tablename__ = 'categoria_comercio'
 
-    id_categoria_comercio = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    id_categoria = db.Column(db.Integer, autoincrement=True, primary_key=True)
     nome = db.Column(db.String(80), nullable=False)
     descricao = db.Column(db.String(120), nullable=False)
     comercios = db.relationship('Comercio', backref='categoria_comercio', lazy=False)
@@ -17,16 +17,19 @@ class Comercio(db.Model):
     nome = db.Column(db.String(80), nullable=False)
     descricao = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
+    cpf_cnpj = db.Column(db.String(25), nullable=False, unique=True)
     senha = db.Column(db.String(120), nullable=False)
     imagem = db.Column(db.String(80))
     funcionamento = db.Column(db.Boolean, default=False, nullable=False)
     ativo = db.Column(db.Boolean, default=True, nullable=False)
     cidade_id = db.Column(db.Integer, db.ForeignKey('cidade.id_cidade'), nullable=False)
-    categoria_id = db.Column(db.Integer, db.ForeignKey('categoria_comercio.id_categoria_comercio', nullable=False))
+    categoria_id = db.Column(db.Integer, db.ForeignKey('categoria_comercio.id_categoria', nullable=False))
     formas_atendimento = db.relationship('FormaAtendimento', backref='comercio', lazy=False)
     formas_pagamento = db.relationship('FormaPagamento', backref='comercio', lazy=False)
     telefones = db.relationship('TelefoneComercio', backref='comercio', lazy=False)
     enderecos = db.relationship('EnderecoComercio', backref='comercio', lazy=False)
+    categorias = db.relationship('CategoriaProduto', backref='comercio', lazy=False)
+    produtos = db.relationship('Produto', backref='comercio', lazy=False)
 
 class EnderecoComercio(db.Model):
 
