@@ -16,7 +16,7 @@ class Comercio(db.Model):
     id_comercio = db.Column(db.Integer, autoincrement=True, primary_key=True)
     nome = db.Column(db.String(80), nullable=False)
     descricao = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(80), nullable=False, unique=True)
     senha = db.Column(db.String(120), nullable=False)
     imagem = db.Column(db.String(80))
     funcionamento = db.Column(db.Boolean, default=False, nullable=False)

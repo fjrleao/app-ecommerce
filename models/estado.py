@@ -17,3 +17,4 @@ class Cidade(db.Model):
     nome = db.Column(db.String(45))
     estado_id = db.Column(db.Integer, db.ForeignKey('estado.id_estado'), nullable=False)
     comercios = db.relationship('Comercio', backref='cidade', lazy=False)
+    clientes = db.relationship('Cliente', backref='cidade', lazy=False)
