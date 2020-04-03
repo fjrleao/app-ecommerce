@@ -3,6 +3,7 @@ from flask_restful import Api
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from models.estado import Estado, Cidade
+from models.comercio import Comercio
 from controllers.web.cliente import hello_page
 from controllers.api.cliente import User, Users
 
