@@ -13,6 +13,7 @@ class Cliente(db.Model):
     cidade_id = db.Column(db.Integer, db.ForeignKey('cidade.id_cidade'), nullable=False)
     enderecos = db.relationship('EnderecoCliente', backref='cliente', lazy=False)
     telefones = db.relationship('TelefoneCliente', backref='cliente', lazy=False)
+    pedidos = db.relationship('Pedido', backref='cliente', lazy=False)
 
 class EnderecoCliente(db.Model):
 

@@ -24,3 +24,4 @@ class Produto(db.Model):
     desconto = db.Column(db.Float(precision=2))
     comercio_id = db.Column(db.Integer, db.ForeignKey('comercio.id_comercio'), nullable=False)
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria_produto.id_categoria'), nullable=False)
+    pedidos = db.relationship('Pedido', secondary='produtos_pedidos')
