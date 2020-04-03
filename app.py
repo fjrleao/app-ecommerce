@@ -3,7 +3,10 @@ from flask_restful import Api
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from models.estado import Estado, Cidade
-from models.comercio import Comercio
+from models.cliente import Cliente, EnderecoCliente, TelefoneCliente
+from models.comercio import CategoriaComercio, Comercio, EnderecoComercio, FormaAtendimento, FormaPagamento, TelefoneComercio
+from models.pedido import Avaliacao, EnderecoPresente, Pedido, Presente, ProdutosPedido
+from models.produto import CategoriaProduto, Produto
 from controllers.web.cliente import hello_page
 from controllers.api.cliente import User, Users
 

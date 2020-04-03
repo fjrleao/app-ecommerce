@@ -25,7 +25,7 @@ class EnderecoCliente(db.Model):
     bairro = db.Column(db.String(80), nullable=False)
     complemento = db.Column(db.String(80), nullable=False)
     cep = db.Column(db.String(25), nullable=False)
-    cliente_id = db.Column(db.Integer, ForeignKey('cliente.id_cliente'), nullable=False)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id_cliente'), nullable=False)
 
 class TelefoneCliente(db.Model):
 

@@ -23,7 +23,7 @@ class Comercio(db.Model):
     funcionamento = db.Column(db.Boolean, default=False, nullable=False)
     ativo = db.Column(db.Boolean, default=True, nullable=False)
     cidade_id = db.Column(db.Integer, db.ForeignKey('cidade.id_cidade'), nullable=False)
-    categoria_id = db.Column(db.Integer, db.ForeignKey('categoria_comercio.id_categoria', nullable=False))
+    categoria_id = db.Column(db.Integer, db.ForeignKey('categoria_comercio.id_categoria'), nullable=False)
     formas_atendimento = db.relationship('FormaAtendimento', backref='comercio', lazy=False)
     formas_pagamento = db.relationship('FormaPagamento', backref='comercio', lazy=False)
     telefones = db.relationship('TelefoneComercio', backref='comercio', lazy=False)
@@ -65,6 +65,6 @@ class FormaPagamento(db.Model):
 
     __tablename__ = 'forma_pagamento'
 
-    id_forma_pagamento = db.Column(db.Integer, autoincremet=True, primary_key=True)
+    id_forma_pagamento = db.Column(db.Integer, autoincrement=True, primary_key=True)
     descricao = db.Column(db.String(45), nullable=False)
     comercio_id = db.Column(db.Integer, db.ForeignKey('comercio.id_comercio'), nullable=False)
