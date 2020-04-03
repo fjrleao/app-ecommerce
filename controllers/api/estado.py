@@ -5,4 +5,4 @@ from models.estado import Cidade, Estado
 class Estados(Resource):
     def get(self):
         estados = Estado.query.all()
-        return estados
+        return {'ok' : 'ok'}

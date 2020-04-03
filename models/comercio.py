@@ -30,7 +30,7 @@ class Comercio(db.Model):
     enderecos = db.relationship('EnderecoComercio', backref='comercio', lazy=False)
     categorias = db.relationship('CategoriaProduto', backref='comercio', lazy=False)
     produtos = db.relationship('Produto', backref='comercio', lazy=False)
-    pedidos = db.relationship('Pedido', backref='cliente', lazy=False)
+    pedidos = db.relationship('Pedido', backref='comercio', lazy=False)
 
 class EnderecoComercio(db.Model):
 
