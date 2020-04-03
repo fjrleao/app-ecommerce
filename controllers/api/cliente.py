@@ -1,6 +1,5 @@
 from flask import request, json
 from flask_restful import Resource
-from models.cliente import ClienteModel
 
 users = [
     {
