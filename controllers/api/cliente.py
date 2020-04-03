@@ -1,5 +1,6 @@
 from flask import request, json
 from flask_restful import Resource
+from models.cliente import Cliente
 
 users = [
     {
@@ -29,7 +30,7 @@ class User(Resource):
 
 class Users(Resource):
     def get(self):
-        clientes = ClienteModel.query.all()
+        clientes = Cliente.query.all()
         print(clientes)
         for cli in clientes:
             print(cli.nome)

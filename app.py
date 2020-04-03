@@ -7,19 +7,17 @@ from models.cliente import Cliente, EnderecoCliente, TelefoneCliente
 from models.comercio import CategoriaComercio, Comercio, EnderecoComercio, FormaAtendimento, FormaPagamento, TelefoneComercio
 from models.pedido import Avaliacao, EnderecoPresente, Pedido, Presente, ProdutosPedido
 from models.produto import CategoriaProduto, Produto
-from controllers.web.cliente import hello_page
-from controllers.api.cliente import User, Users
+from controllers.api.estado import Estados
 
 app = Flask(__name__)
 app.config.from_object('config')
 api = Api(app)
 
 #rotas da API
-api.add_resource(User, "/users/<int:id>")
-api.add_resource(Users, "/users/")
+api.add_resource(Estados, "/estados/")
 
 #rotas da aplicaçao web
-app.register_blueprint(hello_page)
+#app.register_blueprint(hello_page)
 
 from db import db
 
