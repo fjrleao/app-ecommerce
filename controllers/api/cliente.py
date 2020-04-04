@@ -1,6 +1,6 @@
 from flask import request, json
 from flask_restful import Resource
-from models.cliente import Cliente
+from models.cliente import ModeloCliente
 
 users = [
     {
