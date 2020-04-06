@@ -7,15 +7,16 @@ from models.cliente import ModeloCliente, ModeloEnderecoCliente, ModeloTelefoneC
 from models.comercio import ModeloCategoriaComercio, ModeloComercio, ModeloEnderecoComercio, ModeloFormaAtendimento, ModeloFormaPagamento, ModeloTelefoneComercio
 from models.pedido import ModeloAvaliacao, ModeloEnderecoPresente, ModeloPedido, ModeloPresente, ModeloProdutosPedido
 from models.produto import ModeloCategoriaProduto, ModeloProduto
-#from controllers.api.estado import Estados, Cidades
+from controllers.api.estado import Estados, Cidades, Cidade
 
 app = Flask(__name__)
 app.config.from_object('config')
 api = Api(app)
 
 #rotas da API
-#api.add_resource(Estados, "/estados/")
-#api.add_resource(Cidades, '/estado/<int:id_estado>/')
+api.add_resource(Estados, '/estados/')
+api.add_resource(Cidades, '/estado/<int:id_estado>/cidades/')
+api.add_resource(Cidade, '/cidade/<int:id_cidade>/')
 
 #rotas da aplicaçao web
 #app.register_blueprint(hello_page)
