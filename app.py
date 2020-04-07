@@ -9,6 +9,7 @@ from models.pedido import ModeloAvaliacao, ModeloEnderecoPresente, ModeloPedido,
 from models.produto import ModeloCategoriaProduto, ModeloProduto
 from controllers.api.estado import Estados, Cidades, Cidade
 from controllers.api.cliente import Clientes, Cliente, TelefoneCliente, EnderecoCliente
+from controllers.api.comercio import CategoriaComercio, Comercios
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -22,6 +23,8 @@ api.add_resource(Clientes, '/cidade/<int:id_cidade>/cliente/')
 api.add_resource(Cliente, '/cliente/<int:id_cliente>/')
 api.add_resource(TelefoneCliente, '/cliente/<int:id_cliente>/telefone/')
 api.add_resource(EnderecoCliente, '/cliente/<int:id_cliente>/endereco/')
+api.add_resource(CategoriaComercio, '/categoria_comercio/')
+api.add_resource(Comercios, '/cidade/<int:id_cidade>/categoria_comercio/<int:id_categoria>/comercio/')
 
 #rotas da aplicaçao web
 #app.register_blueprint(hello_page)

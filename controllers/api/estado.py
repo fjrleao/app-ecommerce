@@ -15,9 +15,9 @@ class Estados(Resource):
         resultado = []
         for e in estados:
             estado = {
-                "id" : e.id_estado,
-                "nome" : e.nome,
-                "sigla" : e.sigla
+                "id": e.id_estado,
+                "nome": e.nome,
+                "sigla": e.sigla
             }
             resultado.append(estado)
         return resultado
@@ -27,15 +27,15 @@ class Estados(Resource):
         dados = Estados.parser.parse_args()
         estado = ModeloEstado.query.filter_by(nome=dados['nome']).first()
         if estado:
-            return {'erro' : 'Estado já cadastrado'}, 500
+            return {'erro': 'Estado já cadastrado'}, 500
         else:
             estado = ModeloEstado(nome=dados['nome'], sigla=dados['sigla'])
             db.session.add(estado)
             db.session.commit()
             resultado = {
-                "id" : estado.id_estado,
-                "nome" : estado.nome,
-                "sigla" : estado.sigla
+                "id": estado.id_estado,
+                "nome": estado.nome,
+                "sigla": estado.sigla
             }
             return resultado, 201
 
@@ -47,12 +47,12 @@ class Cidade(Resource):
         try:
             cidade = ModeloCidade.query.filter_by(id_cidade=id_cidade).first()
             resultado = {
-                "id" : cidade.id_cidade,
-                "nome" : cidade.nome
+                "id": cidade.id_cidade,
+                "nome": cidade.nome
             }
             return resultado, 200
         except:
-            return {'erro' : 'Cidade não encontrada'}, 404
+            return {'erro': 'Cidade não encontrada'}, 404
         
 
 class Cidades(Resource):
@@ -65,17 +65,17 @@ class Cidades(Resource):
         dados = Cidades.parser.parse_args()
         cidade = ModeloCidade.query.filter_by(nome=dados['nome']).first()
         if cidade:
-            return {'erro' : 'Cidade já existe'}, 500
+            return {'erro': 'Cidade já existe'}, 500
         else:
             estado = ModeloEstado.query.filter_by(id_estado=id_estado).first()
             cidade = ModeloCidade(nome=dados['nome'], estado=estado)
             db.session.add(cidade)
             db.session.commit()
             resultado = {
-                "id_estado" : estado.id_estado,
-                "nome_estado" : estado.nome,
-                "id_cidade" : cidade.id_cidade,
-                "nome_cidade" : cidade.nome
+                "id_estado": estado.id_estado,
+                "nome_estado": estado.nome,
+                "id_cidade": cidade.id_cidade,
+                "nome_cidade": cidade.nome
             }
             return resultado, 201
 
@@ -84,18 +84,18 @@ class Cidades(Resource):
         try:
             estado = ModeloEstado.query.filter_by(id_estado=id_estado).first()
             resultado = {
-                "id" : estado.id_estado,
-                "nome" : estado.nome,
-                "sigla" : estado.sigla
+                "id": estado.id_estado,
+                "nome": estado.nome,
+                "sigla": estado.sigla
             }
             aux = []
             for c in estado.cidades:
                 cidade = {
-                    "id" : c.id_cidade,
-                    "nome" : c.nome
+                    "id": c.id_cidade,
+                    "nome": c.nome
                 }
                 aux.append(cidade)
             resultado["cidades"] = aux
             return resultado, 200
         except:
-            return {'erro' : 'estado não encontrado'}, 404
+            return {'erro': 'estado não encontrado'}, 404
