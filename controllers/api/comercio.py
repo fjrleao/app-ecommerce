@@ -99,6 +99,127 @@ class Comercios(Resource):
 
         return resultado, 200
 
+class Comercio(Resource):
+
+    def get(self, id_comercio):
+
+        comercio = ModeloComercio.query.filter_by(id_comercio=id_comercio).first()
+
+        if comercio:
+        
+            resultado = {
+                "cidade": {
+                    "id": comercio.cidade.id_cidade,
+                    "nome": comercio.cidade.nome,
+                    "comercio":{
+                        "id": comercio.id_comercio,
+                        "nome": comercio.nome,
+                        "email": comercio.email
+                    }
+                }
+            }
+            aux_telefone = []
+            aux_endereco = []
+            aux_atendimento = []
+            aux_pagamento = []
+            for t in comercio.telefones:
+                telefone = {
+                    "id": t.id_telefone,
+                    "telefone": t.telefone
+                }
+                aux_telefone.append(telefone)
+
+            for e in comercio.enderecos:
+                endereco = {
+                    "id": e.id_endereco,
+                    "rua": e.rua,
+                    "numero": e.numero,
+                    "bairro": e.bairro,
+                    "complemento": e.complemento,
+                    "cep": e.cep
+                }
+                aux_endereco.append(endereco)
+
+            for a in comercio.formas_atendimento:
+                atendimento = {
+                    "id": a.id_forma_atendimento,
+                    "descricao": a.descricao
+                }
+                aux_atendimento.append(atendimento)
+            
+            for p in comercio.formas_pagamento:
+                pagamento = {
+                    "id": p.id_forma_pagamento,
+                    "descricao": p.descricao
+                }
+                aux_pagamento.append(pagamento)
+
+            resultado["cidade"]["comercio"]["telefones"] = aux_telefone
+            resultado["cidade"]["comercio"]["enderecos"] = aux_endereco
+            resultado["cidade"]["comercio"]["atendimentos"] = aux_atendimento
+            resultado["cidade"]["comercio"]["pagamentos"] = aux_pagamento
+
+            return  resultado, 200
+        return {'erro': 'Comercio nao encontrado'}, 500
+
+class AtendimentoComercio(Resource):
+
+    parser = reqparse.RequestParser()
+    parser.add_argument('descricao', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+
+    def post(self, id_comercio):
+        
+        dados = AtendimentoComercio.parser.parse_args()
+        
+        atendimento = ModeloFormaAtendimento.query.filter_by(descricao=dados['descricao'], comercio_id=id_comercio).first()
+
+        if atendimento:
+            return {'erro': 'Forma de atendimento já cadastrada'}, 500
+        else:
+            try:
+                comercio = ModeloComercio.query.filter_by(id_comercio=id_comercio).first()
+                atendimento = ModeloFormaAtendimento(descricao=dados['descricao'], comercio=comercio)
+                db.session.add(atendimento)
+                db.session.commit()
+                resultado = {
+                    "comercio": atendimento.comercio.nome,
+                    "forma_atendimento": atendimento.descricao
+                }
+
+                return resultado, 201
+            except:
+                return {'erro': 'nao foi possivel cadastrar'}, 500
+
+class PagamentoComercio(Resource):
+
+    parser = reqparse.RequestParser()
+    parser.add_argument('descricao', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+
+    def post(self, id_comercio):
+
+        dados = PagamentoComercio.parser.parse_args()
+
+        pagamento = ModeloFormaPagamento.query.filter_by(descricao=dados['descricao'], comercio_id=id_comercio).first()
+
+        if pagamento:
+            return {'erro': 'forma de pagamento ja cadastrada'}, 500
+        else:
+            try:
+                comercio = ModeloComercio.query.filter_by(id_comercio=id_comercio).first()
+                pagamento = ModeloFormaPagamento(descricao=dados['descricao'], comercio=comercio)
+                db.session.add(pagamento)
+                db.session.commit()
+                resultado = {
+                    "comercio": pagamento.comercio.nome,
+                    "forma_pagamento": pagamento.descricao
+                }
+
+                return resultado, 201
+            except:
+                return {'erro': 'nao foi possivel cadastrar'}, 500
+
+
+
 class TelefoneComercio(Resource):
 
     parser = reqparse.RequestParser()
@@ -135,18 +256,20 @@ class EnderecoComercio(Resource):
     def post(self, id_comercio):
 
         dados = EnderecoComercio.parser.parse_args()
+        try:
+            endereco = ModeloEnderecoComercio(rua=dados['rua'], numero=dados['numero'], bairro=dados['bairro'], complemento=dados['complemento'], cep=dados['cep'], comercio_id=id_comercio)
+            db.session.add(endereco)
+            db.session.commit()
+            resultado = {
+                "nome": endereco.comercio.nome,
+                "id_endereco": endereco.id_endereco,
+                "rua": endereco.rua,
+                "numero": endereco.numero,
+                "bairro": endereco.bairro,
+                "complemento": endereco.complemento,
+                "cep": endereco.cep
+            }
 
-        endereco = ModeloEnderecoComercio(rua=dados['rua'], numero=dados['numero'], bairro=dados['bairro'], complemento=dados['complemento'], cep=dados['cep'], comercio_id=id_comercio)
-        db.session.add(endereco)
-        db.session.commit()
-        resultado = {
-            "nome": endereco.comercio.nome,
-            "id_endereco": endereco.id_endereco,
-            "rua": endereco.rua,
-            "numero": endereco.numero,
-            "bairro": endereco.bairro,
-            "complemento": endereco.complemento,
-            "cep": endereco.cep
-        }
-
-        return resultado
+            return resultado
+        except:
+            return {'erro' : 'Por algum motivo ocorreu um erro no servidor'}, 500

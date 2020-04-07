@@ -9,7 +9,7 @@ from models.pedido import ModeloAvaliacao, ModeloEnderecoPresente, ModeloPedido,
 from models.produto import ModeloCategoriaProduto, ModeloProduto
 from controllers.api.estado import Estados, Cidades, Cidade
 from controllers.api.cliente import Clientes, Cliente, TelefoneCliente, EnderecoCliente
-from controllers.api.comercio import CategoriaComercio, Comercios, TelefoneComercio, EnderecoComercio
+from controllers.api.comercio import CategoriaComercio, Comercios, TelefoneComercio, EnderecoComercio, Comercio, AtendimentoComercio, PagamentoComercio
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -27,6 +27,9 @@ api.add_resource(CategoriaComercio, '/categoria_comercio/')
 api.add_resource(Comercios, '/cidade/<int:id_cidade>/categoria_comercio/<int:id_categoria>/comercio/')
 api.add_resource(TelefoneComercio, '/comercio/<int:id_comercio>/telefone/')
 api.add_resource(EnderecoComercio, '/comercio/<int:id_comercio>/endereco/')
+api.add_resource(Comercio, '/comercio/<int:id_comercio>/')
+api.add_resource(AtendimentoComercio, '/comercio/<int:id_comercio>/atendimento/')
+api.add_resource(PagamentoComercio, '/comercio/<int:id_comercio>/pagamento/')
 
 #rotas da aplicaçao web
 #app.register_blueprint(hello_page)
