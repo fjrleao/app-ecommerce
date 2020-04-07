@@ -98,3 +98,55 @@ class Comercios(Resource):
             resultado.append(comercio)
 
         return resultado, 200
+
+class TelefoneComercio(Resource):
+
+    parser = reqparse.RequestParser()
+    parser.add_argument('telefone', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+
+    def post(self, id_comercio):
+        
+        dados = TelefoneComercio.parser.parse_args()
+
+        telefone = ModeloTelefoneComercio.query.filter_by(telefone=dados['telefone']).first()
+
+        if telefone:
+            return {'erro': 'Telefone já cadastrado'}, 500
+        else:
+            telefone = ModeloTelefoneComercio(telefone=dados['telefone'], comercio_id=id_comercio)
+            db.session.add(telefone)
+            db.session.commit()
+            resultado = {
+                "comercio": telefone.comercio.nome,
+                "telefone": telefone.telefone
+            }
+
+            return resultado, 201
+
+class EnderecoComercio(Resource):
+
+    parser = reqparse.RequestParser()
+    parser.add_argument('rua', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+    parser.add_argument('numero', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+    parser.add_argument('bairro', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+    parser.add_argument('complemento', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+    parser.add_argument('cep', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+
+    def post(self, id_comercio):
+
+        dados = EnderecoComercio.parser.parse_args()
+
+        endereco = ModeloEnderecoComercio(rua=dados['rua'], numero=dados['numero'], bairro=dados['bairro'], complemento=dados['complemento'], cep=dados['cep'], comercio_id=id_comercio)
+        db.session.add(endereco)
+        db.session.commit()
+        resultado = {
+            "nome": endereco.comercio.nome,
+            "id_endereco": endereco.id_endereco,
+            "rua": endereco.rua,
+            "numero": endereco.numero,
+            "bairro": endereco.bairro,
+            "complemento": endereco.complemento,
+            "cep": endereco.cep
+        }
+
+        return resultado
