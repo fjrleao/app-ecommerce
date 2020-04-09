@@ -59,6 +59,8 @@ class ModeloFormaAtendimento(db.Model):
 
     id_forma_atendimento = db.Column(db.Integer, autoincrement=True, primary_key=True)
     descricao = db.Column(db.String(45), nullable=False)
+    valor = db.Column(db.Float(precision=2), nullable=False)
+    compra_minino_pedido = db.Column(db.Float(precision=2), nullable=False)
     comercio_id = db.Column(db.Integer, db.ForeignKey('comercio.id_comercio'), nullable=False)
 
 class ModeloFormaPagamento(db.Model):

@@ -16,7 +16,6 @@ class ModeloProduto(db.Model):
     id_produto = db.Column(db.Integer, autoincrement=True, primary_key=True)
     codigo_barra = db.Column(db.String(45), nullable=False)
     nome = db.Column(db.String(80), nullable=False)
-    descricao = db.Column(db.String(120), nullable=False)
     preco = db.Column(db.Float(precision=2), nullable=False)
     quantidade = db.Column(db.Integer, nullable=False)
     imagem = db.Column(db.String(80))
@@ -24,4 +23,14 @@ class ModeloProduto(db.Model):
     desconto = db.Column(db.Float(precision=2))
     comercio_id = db.Column(db.Integer, db.ForeignKey('comercio.id_comercio'), nullable=False)
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria_produto.id_categoria'), nullable=False)
+    detalhes = db.relationship('ModeloDetalheProduto', backref='produto', lazy=False)
     pedidos = db.relationship('ModeloPedido', secondary='produtos_pedidos')
+
+class ModeloDetalheProduto(db.Model):
+
+    __tablename__ = 'detalhe_produto'
+
+    id_detalhe = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    nome = db.Column(db.String(45), nullable=False)
+    descricao = db.Column(db.String(45), nullable=False)
+    produto_id = db.Column(db.Integer, db.ForeignKey('produto.id_produto'), nullable=False)
