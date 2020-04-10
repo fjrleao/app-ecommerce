@@ -10,7 +10,7 @@ from models.produto import ModeloCategoriaProduto, ModeloProduto
 from controllers.api.estado import Estados, Cidades, Cidade
 from controllers.api.cliente import Clientes, Cliente, TelefoneCliente, EnderecoCliente
 from controllers.api.comercio import CategoriaComercio, Comercios, TelefoneComercio, EnderecoComercio, Comercio, AtendimentoComercio, PagamentoComercio
-from controllers.api.produto import CategoriasProduto, Produtos
+from controllers.api.produto import CategoriasProduto, Produtos, DetalhesProduto
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -31,8 +31,9 @@ api.add_resource(EnderecoComercio, '/comercio/<int:id_comercio>/endereco/')
 api.add_resource(Comercio, '/comercio/<int:id_comercio>/')
 api.add_resource(AtendimentoComercio, '/comercio/<int:id_comercio>/atendimento/')
 api.add_resource(PagamentoComercio, '/comercio/<int:id_comercio>/pagamento/')
-api.add_resource(CategoriasProduto, '/comercio/<int:id_comercio>/categoria/')
-api.add_resource(Produtos, '/comercio/<int:id_comercio>/categoria/<int:id_categoria>/produto/')
+api.add_resource(CategoriasProduto, '/comercio/<int:id_comercio>/categoria_produto/')
+api.add_resource(Produtos, '/comercio/<int:id_comercio>/categoria_produto/<int:id_categoria>/produto/')
+api.add_resource(DetalhesProduto, '/produto/<int:id_produto>/detalhes_produto/')
 
 #rotas da aplicaçao web
 #app.register_blueprint(hello_page)

@@ -1,6 +1,7 @@
 from flask import request, json
 from flask_restful import Resource, reqparse
 from models.cliente import ModeloCliente, ModeloTelefoneCliente, ModeloEnderecoCliente
+from models.estado import ModeloCidade
 from db import db
 
 class TelefoneCliente(Resource):
@@ -114,44 +115,51 @@ class Clientes(Resource):
     def post(self, id_cidade):
 
         dados = Clientes.parser.parse_args()
-
-        cliente = ModeloCliente.query.filter_by(email=dados['email']).first()
-        if cliente:
-            return {'erro': 'Cliente já cadastrado com esse email'}, 500
-        else:
-            cliente = ModeloCliente(nome=dados['nome'], email=dados['email'], senha=dados['senha'], cidade_id=id_cidade)
-            db.session.add(cliente)
-            db.session.commit()
-            resultado = {
-                "cidade": {
-                    "id": cliente.cidade.id_cidade,
-                    "nome": cliente.cidade.nome,
-                },
-                "cliente": {
-                    "id": cliente.id_cliente,
-                    "nome": cliente.nome,
-                    "email": cliente.email,
+        
+        try:
+            cidade = ModeloCidade.query.filter_by(id_cidade=id_cidade).first()
+            cliente = ModeloCliente.query.filter_by(email=dados['email']).first()
+            if cliente:
+                return {'erro': 'Cliente já cadastrado com esse email'}, 500
+            else:
+                cliente = ModeloCliente(nome=dados['nome'], email=dados['email'], senha=dados['senha'], cidade=cidade)
+                db.session.add(cliente)
+                db.session.commit()
+                resultado = {
+                    "cidade": {
+                        "id": cliente.cidade.id_cidade,
+                        "nome": cliente.cidade.nome,
+                    },
+                    "cliente": {
+                        "id": cliente.id_cliente,
+                        "nome": cliente.nome,
+                        "email": cliente.email,
+                    }
                 }
-            }
-            return resultado, 201
-    
+                return resultado, 201
+        except:
+            return{'erro' : 'erro no servidor'}, 500
+
     def get(self, id_cidade):
 
-        clientes = ModeloCliente.query.filter_by(cidade_id=id_cidade)
+        cidade = ModeloCidade.query.filter_by(id_cidade=id_cidade).first()
+        clientes = ModeloCliente.query.filter_by(cidade=cidade)
 
-        resultado = {
-            "nome_cidade" : clientes[0].cidade.nome
-        }
-        aux = []
-        for c in clientes:
-            cliente = {
-                "nome": c.nome,
-                "email": c.email
+        if cidade:
+            resultado = {
+                "nome_cidade" : cidade.nome
             }
-            aux.append(cliente)
+            aux = []
+            for c in clientes:
+                cliente = {
+                    "nome": c.nome,
+                    "email": c.email
+                }
+                aux.append(cliente)
 
-        resultado["clientes"] = aux
+            resultado["clientes"] = aux
 
-        return resultado, 200
+            return resultado, 200
+        return {'erro' : 'cidade nao cadastrada'}, 500
 
 

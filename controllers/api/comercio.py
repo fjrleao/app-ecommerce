@@ -143,7 +143,9 @@ class Comercio(Resource):
             for a in comercio.formas_atendimento:
                 atendimento = {
                     "id": a.id_forma_atendimento,
-                    "descricao": a.descricao
+                    "descricao": a.descricao,
+                    "compra_minia": a.compra_minino_pedido,
+                    "valor": a.valor
                 }
                 aux_atendimento.append(atendimento)
             
@@ -166,6 +168,8 @@ class AtendimentoComercio(Resource):
 
     parser = reqparse.RequestParser()
     parser.add_argument('descricao', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+    parser.add_argument('compra_minino_pedido', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
+    parser.add_argument('valor', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
 
     def post(self, id_comercio):
         
@@ -178,7 +182,7 @@ class AtendimentoComercio(Resource):
         else:
             try:
                 comercio = ModeloComercio.query.filter_by(id_comercio=id_comercio).first()
-                atendimento = ModeloFormaAtendimento(descricao=dados['descricao'], comercio=comercio)
+                atendimento = ModeloFormaAtendimento(descricao=dados['descricao'], compra_minino_pedido=dados['compra_minino_pedido'], valor=dados['valor'], comercio=comercio)
                 db.session.add(atendimento)
                 db.session.commit()
                 resultado = {

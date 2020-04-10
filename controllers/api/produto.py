@@ -1,7 +1,7 @@
 from db import db
-from models.produto import ModeloCategoriaProduto, ModeloProduto
+from models.produto import ModeloCategoriaProduto, ModeloProduto, ModeloDetalheProduto
 from models.comercio import ModeloComercio
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, request
 
 class CategoriasProduto(Resource):
 
@@ -66,7 +66,6 @@ class Produtos(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('codigo_barra', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
         parser.add_argument('nome', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
-        parser.add_argument('descricao', type=str, required=True, help="Esse campo não pode ser deixado em branco.")
         parser.add_argument('preco', type=float, required=True, help="Esse campo não pode ser deixado em branco.")
         parser.add_argument('quantidade', type=int, required=True, help="Esse campo não pode ser deixado em branco.")
         parser.add_argument('desconto', type=float, required=True, help="Esse campo não pode ser deixado em branco.")
@@ -82,7 +81,6 @@ class Produtos(Resource):
                 produto = ModeloProduto(
                     codigo_barra=dados['codigo_barra'],
                     nome=dados['nome'],
-                    descricao=dados['descricao'],
                     preco=dados['preco'],
                     quantidade=dados['quantidade'],
                     desconto=dados['desconto'],
@@ -98,7 +96,6 @@ class Produtos(Resource):
                         "produto":{
                             "codigo_barra": produto.codigo_barra,
                             "nome": produto.nome,
-                            "descricao": produto.descricao,
                             "preco": produto.preco
                         }
                     }
@@ -124,13 +121,20 @@ class Produtos(Resource):
 
             aux_produto = []
             for p in produtos:
+                aux_detalhe = []
                 produto = {
                     "id" : p.id_produto,
                     "codigo_barra": p.codigo_barra,
                     "nome": p.nome,
-                    "descricao": p.descricao,
                     "preco": p.preco
                 }
+                for d in p.detalhes:
+                    detalhe = {
+                        "nome" : d.nome,
+                        "descricao":d.descricao
+                    }
+                    aux_detalhe.append(detalhe)
+                produto["detalhes"] = aux_detalhe
                 aux_produto.append(produto)
 
             resultado["comercio"]["categoria"]["produtos"] = aux_produto
@@ -138,3 +142,36 @@ class Produtos(Resource):
             return resultado, 200
         except:
             return {'erro': 'erro no servidor'}, 500
+
+class DetalhesProduto(Resource):
+
+    def post(self, id_produto):
+
+        dados = request.get_json()
+        
+        produto = ModeloProduto.query.filter_by(id_produto=id_produto).first()
+
+        if produto:
+            aux_resultado = []
+            for d in dados:
+                detalhe = ModeloDetalheProduto(nome=d['nome'], descricao=d['descricao'], produto=produto)
+                db.session.add(detalhe)
+                db.session.commit()
+                detalhe = {
+                    "nome" : d['nome'],
+                    "descricao" : d['descricao']
+                }
+                aux_resultado.append(detalhe)
+
+            resultado = {
+                "produto":{
+                    "nome": produto.nome,
+                    "preco" : produto.preco,
+                    "detalhes": aux_resultado
+                }
+            }
+
+            return resultado, 201
+
+        else:
+            return {'erro': 'produto nao existe'}, 500
