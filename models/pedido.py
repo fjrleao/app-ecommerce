@@ -1,6 +1,6 @@
 from db import db
 
-class ProdutosPedido(db.Model):
+class ModeloProdutosPedido(db.Model):
 
     __tablename__ = 'produtos_pedidos'
 
@@ -11,10 +11,10 @@ class ProdutosPedido(db.Model):
     pedido_id = db.Column(db.Integer, db.ForeignKey('pedido.id_pedido'), nullable=False)
     produto_id = db.Column(db.Integer, db.ForeignKey('produto.id_produto'), nullable=False)
 
-    produto = db.relationship('Produto', backref='produtos_pedidos')
-    pedido = db.relationship('Pedido', backref='produtos_pedidos')
+    produto = db.relationship('ModeloProduto', backref='produtos_pedidos')
+    pedido = db.relationship('ModeloPedido', backref='produtos_pedidos')
 
-class Pedido(db.Model):
+class ModeloPedido(db.Model):
 
     __tablename__ = 'pedido'
 
@@ -25,20 +25,20 @@ class Pedido(db.Model):
     tipo_atendimento = db.Column(db.String(25), nullable=False)
     cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id_cliente'), nullable=False)
     comercio_id = db.Column(db.Integer, db.ForeignKey('comercio.id_comercio'), nullable=False)
-    presente = db.relationship('Presente', backref='pedido', lazy=False, uselist=False)
-    avaliacao = db.relationship('Avaliacao', backref='pedido', lazy=False, uselist=False)
-    produtos = db.relationship('Produto', secondary='produtos_pedidos')
+    presente = db.relationship('ModeloPresente', backref='pedido', lazy=False, uselist=False)
+    avaliacao = db.relationship('ModeloAvaliacao', backref='pedido', lazy=False, uselist=False)
+    produtos = db.relationship('ModeloProduto', secondary='produtos_pedidos')
 
-class Presente(db.Model):
+class ModeloPresente(db.Model):
 
     __tablename__ = 'presente'
 
     id_presente = db.Column(db.Integer, autoincrement=True, primary_key=True)
     descricao = db.Column(db.String(120))
     pedido_id = db.Column(db.Integer, db.ForeignKey('pedido.id_pedido'), nullable=False)
-    endereco = db.relationship('EnderecoPresente', backref='presente', uselist=False)
+    endereco = db.relationship('ModeloEnderecoPresente', backref='presente', uselist=False)
 
-class EnderecoPresente(db.Model):
+class ModeloEnderecoPresente(db.Model):
 
     __tablename__ = 'endereco_presente'
 
@@ -50,7 +50,7 @@ class EnderecoPresente(db.Model):
     cep = db.Column(db.String(25), nullable=False)
     presente_id = db.Column(db.Integer, db.ForeignKey('presente.id_presente'), nullable=False)
 
-class Avaliacao(db.Model):
+class ModeloAvaliacao(db.Model):
 
     __tablename__ = 'avaliacao'
 

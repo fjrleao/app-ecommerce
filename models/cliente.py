@@ -1,6 +1,6 @@
 from db import db
 
-class Cliente(db.Model):
+class ModeloCliente(db.Model):
 
     __tablename__ = 'cliente'
 
@@ -11,11 +11,11 @@ class Cliente(db.Model):
     imagem = db.Column(db.String(80))
     ativo = db.Column(db.Boolean, default=True, nullable=False)
     cidade_id = db.Column(db.Integer, db.ForeignKey('cidade.id_cidade'), nullable=False)
-    enderecos = db.relationship('EnderecoCliente', backref='cliente', lazy=False)
-    telefones = db.relationship('TelefoneCliente', backref='cliente', lazy=False)
-    pedidos = db.relationship('Pedido', backref='cliente', lazy=False)
+    enderecos = db.relationship('ModeloEnderecoCliente', backref='cliente', lazy=False)
+    telefones = db.relationship('ModeloTelefoneCliente', backref='cliente', lazy=False)
+    pedidos = db.relationship('ModeloPedido', backref='cliente', lazy=False)
 
-class EnderecoCliente(db.Model):
+class ModeloEnderecoCliente(db.Model):
 
     __tablename__ = 'endereco_cliente'
 
@@ -27,7 +27,7 @@ class EnderecoCliente(db.Model):
     cep = db.Column(db.String(25), nullable=False)
     cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id_cliente'), nullable=False)
 
-class TelefoneCliente(db.Model):
+class ModeloTelefoneCliente(db.Model):
 
     __tablename__ = 'telefone_cliente'
 
