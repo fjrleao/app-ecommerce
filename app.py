@@ -5,7 +5,7 @@ from flask_migrate import Migrate, MigrateCommand
 from models.estado import ModeloCidade, ModeloEstado
 from models.cliente import ModeloCliente, ModeloEnderecoCliente, ModeloTelefoneCliente
 from models.comercio import ModeloCategoriaComercio, ModeloComercio, ModeloEnderecoComercio, ModeloFormaAtendimento, ModeloFormaPagamento, ModeloTelefoneComercio
-from models.pedido import ModeloAvaliacao, ModeloEnderecoPresente, ModeloPedido, ModeloPresente, ModeloProdutosPedido
+from models.pedido import ModeloAvaliacao, ModeloPedido, ModeloPresente, ModeloProdutosPedido
 from models.produto import ModeloCategoriaProduto, ModeloProduto
 from controllers.api.estado import Estados, Cidades, Cidade
 from controllers.api.cliente import Clientes, Cliente, TelefoneCliente, EnderecoCliente
