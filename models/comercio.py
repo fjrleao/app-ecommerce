@@ -1,4 +1,5 @@
 from db import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class ModeloCategoriaComercio(db.Model):
 
@@ -18,7 +19,7 @@ class ModeloComercio(db.Model):
     descricao = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
     cpf_cnpj = db.Column(db.String(25), nullable=False, unique=True)
-    senha = db.Column(db.String(120), nullable=False)
+    senha = db.Column(db.String(260), nullable=False)
     imagem = db.Column(db.String(80))
     funcionamento = db.Column(db.Boolean, default=False, nullable=False)
     ativo = db.Column(db.Boolean, default=True, nullable=False)
@@ -31,6 +32,19 @@ class ModeloComercio(db.Model):
     categorias = db.relationship('ModeloCategoriaProduto', backref='comercio', lazy=False)
     produtos = db.relationship('ModeloProduto', backref='comercio', lazy=False)
     pedidos = db.relationship('ModeloPedido', backref='comercio', lazy=False)
+
+    def __init__(self, nome, descricao, email, cpf_cnpj, senha, cidade, categoria):
+        self.nome = nome
+        self.descricao = descricao
+        self.email = email
+        self.cpf_cnpj = cpf_cnpj
+        self.senha = generate_password_hash(senha)
+        self.cidade_id = cidade
+        self.categoria_id = categoria
+
+    def verificaSenha(self, senha):
+        return check_password_hash(self.senha, senha)
+
 
 class ModeloEnderecoComercio(db.Model):
 

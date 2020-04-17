@@ -74,7 +74,8 @@ class Cliente(Resource):
                     "cliente":{
                         "id": cliente.id_cliente,
                         "nome": cliente.nome,
-                        "email": cliente.email
+                        "email": cliente.email,
+                        "senha" : cliente.senha
                     }
                 }
             }
@@ -116,13 +117,14 @@ class Clientes(Resource):
 
         dados = Clientes.parser.parse_args()
         
-        try:
+        
+        cliente = ModeloCliente.query.filter_by(email=dados['email']).first()
+        if cliente:
+            return {'erro': 'Cliente já cadastrado com esse email'}, 500
+        else:
             cidade = ModeloCidade.query.filter_by(id_cidade=id_cidade).first()
-            cliente = ModeloCliente.query.filter_by(email=dados['email']).first()
-            if cliente:
-                return {'erro': 'Cliente já cadastrado com esse email'}, 500
-            else:
-                cliente = ModeloCliente(nome=dados['nome'], email=dados['email'], senha=dados['senha'], cidade=cidade)
+            if cidade:
+                cliente = ModeloCliente(nome=dados['nome'], email=dados['email'], senha=dados['senha'], cidade=id_cidade)
                 db.session.add(cliente)
                 db.session.commit()
                 resultado = {
@@ -137,8 +139,7 @@ class Clientes(Resource):
                     }
                 }
                 return resultado, 201
-        except:
-            return{'erro' : 'erro no servidor'}, 500
+            return {'erro' : 'cidade nao existe'}, 500
 
     def get(self, id_cidade):
 

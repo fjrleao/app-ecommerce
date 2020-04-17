@@ -1,6 +1,11 @@
-from models.comercio import ModeloCategoriaComercio, ModeloComercio, ModeloEnderecoComercio, ModeloFormaAtendimento, ModeloFormaPagamento, ModeloTelefoneComercio
-from db import db
 from flask_restful import Resource, reqparse
+
+from db import db
+from models.comercio import (ModeloCategoriaComercio, ModeloComercio,
+                             ModeloEnderecoComercio, ModeloFormaAtendimento,
+                             ModeloFormaPagamento, ModeloTelefoneComercio)
+from models.estado import ModeloCidade
+
 
 class CategoriaComercio(Resource):
 
@@ -62,27 +67,33 @@ class Comercios(Resource):
             return {'erro' : 'Comercio com esses dados já existe'}, 500
         else:
 
-            comercio = ModeloComercio(nome=dados['nome'],
-                                    descricao=dados['descricao'],
-                                    email=dados['email'],
-                                    cpf_cnpj=dados['cpf_cnpj'],
-                                    senha=dados['senha'],
-                                    cidade_id=id_cidade,
-                                    categoria_id=id_categoria)
-            db.session.add(comercio)
-            db.session.commit()
-            resultado = {
-                "cidade": comercio.cidade.nome,
-                "categoria": comercio.categoria_comercio.nome,
-                "comercio": {
-                    "nome": comercio.nome,
-                    "descricao": comercio.descricao,
-                    "email": comercio.email,
-                    "cpf_cnpj": comercio.cpf_cnpj
+            cidade = ModeloCidade.query.filter_by(id_cidade=id_cidade).first()
+            categoria = ModeloCategoriaComercio.query.filter_by(id_categoria=id_categoria).first()
+            print(cidade)
+            print(categoria)
+            if cidade and categoria:
+                comercio = ModeloComercio(nome=dados['nome'],
+                                        descricao=dados['descricao'],
+                                        email=dados['email'],
+                                        cpf_cnpj=dados['cpf_cnpj'],
+                                        senha=dados['senha'],
+                                        cidade=id_cidade,
+                                        categoria=id_categoria)
+                db.session.add(comercio)
+                db.session.commit()
+                resultado = {
+                    "cidade": comercio.cidade.nome,
+                    "categoria": comercio.categoria_comercio.nome,
+                    "comercio": {
+                        "nome": comercio.nome,
+                        "descricao": comercio.descricao,
+                        "email": comercio.email,
+                        "cpf_cnpj": comercio.cpf_cnpj
+                    }
                 }
-            }
 
-            return resultado, 201
+                return resultado, 201
+            return {'erro' : 'cidade ou categoria nao existem'}, 500
 
     def get(self, id_categoria, id_cidade):
 
@@ -94,6 +105,7 @@ class Comercios(Resource):
                 "nome": c.nome,
                 "descricao": c.descricao,
                 "email": c.email,
+                "senha": c.senha
             }
             resultado.append(comercio)
 
